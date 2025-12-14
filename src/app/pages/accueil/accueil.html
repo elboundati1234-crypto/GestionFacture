@@ -1,1 +1,44 @@
-<p>accueil works!</p>
+<div class="accueil-container">
+    <div class="jumbotron bg-light p-4 rounded-3 mb-5 shadow-sm">
+        <h2 class="display-6">Bienvenue dans l'Application de Gestion des Factures</h2>
+        <p class="lead">
+            Cette application utilise **Angular Standalone** et **IndexedDB (via Dexie.js)** pour une gestion des données 100% locale, performante et privée.
+        </p>
+    </div>
+
+    <h3 class="mb-4">Navigation Rapide :</h3>
+
+    <div class="row g-4">
+        
+        <div class="col-md-4">
+            <div class="card h-100 shadow-sm border-info">
+                <div class="card-body">
+                    <h5 class="card-title text-info">Gérer les Clients</h5>
+                    <p class="card-text">Ajouter, Modifier ou Supprimer les informations des clients. Les clients sont essentiels pour créer des factures.</p>
+                    <a routerLink="/clients" class="btn btn-outline-info">Accéder aux Clients</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card h-100 shadow-sm border-success">
+                <div class="card-body">
+                    <h5 class="card-title text-success">Gérer les Produits</h5>
+                    <p class="card-text">Maintenir la liste des produits ou services, y compris la description et le prix unitaire par défaut.</p>
+                    <a routerLink="/produits" class="btn btn-outline-success">Accéder aux Produits</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card h-100 shadow-sm border-primary">
+                <div class="card-body">
+                    <h5 class="card-title text-primary">Créer et Voir les Factures</h5>
+                    <p class="card-text">Enregistrer des transactions complexes avec plusieurs lignes de commande et visualiser les totaux.</p>
+                    <a routerLink="/factures" class="btn btn-outline-primary">Accéder aux Factures</a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

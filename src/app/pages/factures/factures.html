@@ -1,1 +1,124 @@
-<p>factures works!</p>
+<div class="factures-container card shadow-sm p-4">
+    <h2 class="mb-4">Gestion des Factures</h2>
+
+    <div class="creation-form mb-5 p-3 border rounded">
+        <h3>Créer une nouvelle Facture</h3>
+        <form (ngSubmit)="createFacture()" class="g-3">
+            
+            <fieldset class="mb-4">
+                <legend class="h5 border-bottom pb-2">Informations générales</legend>
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <label class="form-label">Numéro de Facture</label>
+                        <input type="text" [(ngModel)]="newFacture.numFacture" name="numFacture" class="form-control" required />
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Date</label>
+                        <input type="date" [(ngModel)]="newFacture.date" name="date" class="form-control" required />
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Client</label>
+                        <select [(ngModel)]="newFacture.clientId" name="clientId" class="form-select" required>
+                            <option [ngValue]="null" disabled>Sélectionner un client</option>
+                            <option *ngFor="let client of (clients$ | async)" [ngValue]="client.id">
+                                {{ client.name }} {{ client.lastName }} (ID: {{ client.id }})
+                            </option>
+                        </select>
+                    </div>
+                </div>
+            </fieldset>
+
+            <fieldset class="mb-4">
+                <legend class="h5 border-bottom pb-2">Lignes de Commande</legend>
+                
+                <div class="table-responsive mb-3">
+                    <table *ngIf="newFacture.lignes.length > 0" class="table table-bordered table-sm">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Produit</th> <th>Quantité</th>
+                                <th>Prix Unitaire</th>
+                                <th>Total Ligne</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let ligne of newFacture.lignes; let i = index; trackBy: trackByLigne">
+                                <td>{{ getProductName(ligne.produitId) }}</td>
+                                <td>{{ ligne.quantite }}</td>
+                                <td>{{ ligne.prixUnitaire | currency:'EUR':'symbol' }}</td>
+                                <td>{{ calculateLigneTotal(ligne) | currency:'EUR':'symbol' }}</td>
+                                <td><button type="button" (click)="removeLigne(i)" class="btn btn-danger btn-sm">X</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <p class="total-facture text-end fs-5 fw-bold">Total HT Provisoire: 
+                    {{ calculateFactureTotal() | currency:'EUR':'symbol' }}
+                </p>
+
+                <div class="add-ligne row g-2 border-top pt-3">
+                    <h4 class="h6">Ajouter un produit</h4>
+                    <div class="col-md-5">
+                        <select [(ngModel)]="tempLigne.produitId" name="tempProductId" 
+                                (change)="onProductSelected(tempLigne.produitId)" 
+                                class="form-select">
+                            <option [ngValue]="0" disabled>Sélectionner un produit</option>
+                            <option *ngFor="let produit of (produits$ | async)" [ngValue]="produit.id">
+                                {{ produit.nameProd }} ({{ produit.prix | currency:'EUR':'symbol' }})
+                            </option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <input type="number" placeholder="Qté" [(ngModel)]="tempLigne.quantite" name="tempQuantity" min="1" class="form-control" required />
+                    </div>
+                    <div class="col-md-3">
+                        <input type="number" placeholder="Prix Unitaire" [(ngModel)]="tempLigne.prixUnitaire" name="tempPrice" class="form-control" disabled />
+                    </div>
+                    <div class="col-md-2">
+                        <button type="button" (click)="addLigneCommande()" class="btn btn-primary w-100">Ajouter la ligne</button>
+                    </div>
+                </div>
+            </fieldset>
+
+            <button type="submit" class="btn btn-success btn-lg w-100 mt-3" [disabled]="newFacture.lignes.length === 0">Enregistrer la Facture</button>
+        </form>
+    </div>
+
+    <hr class="my-5">
+
+    <h3 class="mb-3">Factures Enregistrées ({{ (factures$ | async)?.length || 0 }})</h3>
+    
+    <div class="table-responsive">
+        <table *ngIf="(factures$ | async) as factures" class="table table-striped table-hover">
+            <thead class="table-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>Numéro</th>
+                    <th>Date</th>
+                    <th>Client</th>
+                    <th>Total HT</th>
+                    <th>Lignes</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let facture of factures; let i = index;"> 
+                    <td>{{ facture.id }}</td>
+                    <td>{{ facture.numFacture }}</td>
+                    <td>{{ facture.date | date:'shortDate' }}</td>
+                    <td>{{ facture.clientName }}</td>
+                    <td class="fw-bold">{{ facture.totalHT | currency:'EUR':'symbol' }}</td>
+                    <td>{{ facture.lignes.length }}</td>
+                    <td>
+                        <button class="btn btn-danger btn-sm" (click)="deleteFacture(facture.id)">Supprimer</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div *ngIf="!(factures$ | async)?.length" class="alert alert-info mt-3" role="alert">
+        Aucune facture enregistrée.
+    </div>
+</div>

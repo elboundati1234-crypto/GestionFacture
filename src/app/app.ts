@@ -1,12 +1,22 @@
-import { Component, signal } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+
+
+import { Component } from '@angular/core';
+import { RouterLink, RouterOutlet, RouterLinkActive } from '@angular/router'; 
+import { CommonModule } from '@angular/common'; 
+
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
+  standalone: true, 
+  imports: [
+    RouterLink,
+    RouterOutlet,
+    RouterLinkActive,
+    CommonModule
+  ], 
   templateUrl: './app.html',
-  styleUrl: './app.css'
+  styleUrls: ['./app.css']
 })
-export class App {
-  protected readonly title = signal('GestionFacture');
+export class App { 
+  title = 'Gestion des Factures (Angular/IndexedDB)';
 }

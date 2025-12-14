@@ -1,1 +1,83 @@
-<p>produits works!</p>
+<div class="produits-container card shadow-sm p-4">
+    <h2>Gestion des Produits</h2>
+
+    <div class="add-form mb-4">
+        <h3 class="border-bottom pb-2">Ajouter un nouveau Produit / Service</h3>
+        <form (ngSubmit)="addProduit()" class="row g-3">
+            
+            <div class="col-md-6">
+                <label class="form-label">Nom du Produit</label>
+                <input 
+                    type="text" 
+                    placeholder="Nom du Produit/Service" 
+                    [(ngModel)]="newProduit.nameProd" 
+                    name="productName"
+                    class="form-control"
+                    required
+                />
+            </div>
+
+            <div class="col-md-6">
+                <label class="form-label">Prix Unitaire HT (€)</label>
+                <input 
+                    type="number" 
+                    placeholder="Prix (€)" 
+                    [(ngModel)]="newProduit.prix" 
+                    name="productPrice"
+                    class="form-control"
+                    min="0.01"
+                    step="0.01"
+                    required
+                />
+            </div>
+            
+            <div class="col-md-10">
+                <label class="form-label">Description (Optionnel)</label>
+                <input 
+                    type="text" 
+                    placeholder="Description détaillée (ex: Service de consulting)" 
+                    [(ngModel)]="newProduit.description" 
+                    name="productDescription"
+                    class="form-control"
+                />
+            </div>
+
+            <div class="col-md-2 d-flex align-items-end">
+                <button type="submit" class="btn btn-success w-100">Enregistrer</button>
+            </div>
+        </form>
+    </div>
+
+    <hr>
+
+    <h3 class="mt-4">Liste des Produits ({{ (produits$ | async)?.length || 0 }})</h3>
+    
+    <div class="table-responsive">
+        <table *ngIf="(produits$ | async) as produits" class="table table-striped table-hover mt-3">
+            <thead class="table-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>Nom</th>
+                    <th>Description</th>
+                    <th>Prix HT</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let produit of produits">
+                    <td>{{ produit.id }}</td>
+                    <td>{{ produit.nameProd }}</td>
+                    <td>{{ produit.description }}</td>
+                    <td>{{ produit.prix | currency:'EUR':'symbol' }}</td>
+                    <td>
+                        <button class="btn btn-danger btn-sm" (click)="deleteProduit(produit.id)">Supprimer</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div *ngIf="!(produits$ | async)?.length" class="alert alert-info mt-3" role="alert">
+        Aucun produit enregistré.
+    </div>
+</div>

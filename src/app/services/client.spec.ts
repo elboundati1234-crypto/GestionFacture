@@ -1,6 +1,7 @@
 import { TestBed } from '@angular/core/testing';
+import { Client } from '../models/client';
 
-import { Client } from './client';
+
 
 describe('Client', () => {
   let service: Client;
