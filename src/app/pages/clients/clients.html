@@ -1,0 +1,53 @@
+<div class="client-container">
+    <h2>Gestion des Clients</h2>
+
+    <div class="add-form">
+        <h3>Ajouter un nouveau client</h3>
+        <form (ngSubmit)="addClient()">
+            <input 
+                type="text" 
+                placeholder="Prénom" 
+                [(ngModel)]="newClient.name" 
+                name="clientName"
+                required
+            />
+            <input 
+                type="text" 
+                placeholder="Nom" 
+                [(ngModel)]="newClient.lastName" 
+                name="clientLastName"
+                required
+            />
+            <button type="submit">Ajouter Client</button>
+        </form>
+    </div>
+
+    <hr>
+
+    <h3>Liste des Clients ({{ (clients$ | async)?.length || 0 }})</h3>
+    
+    <table *ngIf="(clients$ | async) as clients">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Prénom</th>
+                <th>Nom</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let client of clients">
+                <td>{{ client.id }}</td>
+                <td>{{ client.name }}</td>
+                <td>{{ client.lastName }}</td>
+                <td>
+                    <button class="delete-btn" (click)="deleteClient(client.id)">Supprimer</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div *ngIf="!(clients$ | async)?.length" class="no-data">
+        Aucun client enregistré.
+    </div>
+</div>
