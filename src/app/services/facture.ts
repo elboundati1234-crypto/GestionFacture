@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
-import {
-  Facture, FactureDetail, LigneCommande, IndexeddbService, Client, Produit, AppDB
-} from './indexeddb'; 
+import { Client } from '../models/client';
+import { Produit } from '../models/produit';
+import { Facture, FactureDetail, LigneCommande } from '../models/facture';
+import { IndexeddbService, AppDB } from './indexeddb'; 
 import { from, Observable } from 'rxjs';
 import { liveQuery, Table } from 'dexie';
 

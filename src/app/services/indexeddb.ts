@@ -1,42 +1,9 @@
 import { Injectable } from '@angular/core';
 import Dexie, { Table } from 'dexie';
 
-
-
-export interface Client {
-  id?: number; 
-  name: string;
-  lastName: string;
-}
-
-export interface Produit {
-  id?: number;
-  nameProd: string;
-  description: string;
-  prix: number;
-}
-
-export interface Facture {
-  id?: number;
-  numFacture: string;
-  date: Date;
-  clientId: number;
-}
-
-export interface LigneCommande {
-  id?: number;
-  quantite: number;
-  produitId: number;
-  factureId: number;
-}
-
-export interface FactureDetail extends Facture {
-  clientName?: string; 
-  lignes: LigneCommande[];
-  totalHT: number;
-}
-
-
+import { Client } from '../models/client'; 
+import { Produit } from '../models/produit'; 
+import { Facture, LigneCommande } from '../models/facture'; 
 
 
 export class AppDB extends Dexie {
@@ -55,7 +22,6 @@ export class AppDB extends Dexie {
     });
   }
 }
-
 
 
 @Injectable({

@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Produit, IndexeddbService } from './indexeddb'; 
+import { IndexeddbService } from './indexeddb'; 
+import { Produit } from '../models/produit'; 
 import { from, Observable } from 'rxjs';
 import { liveQuery, Table } from 'dexie';
 

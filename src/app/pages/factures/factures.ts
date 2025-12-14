@@ -2,14 +2,19 @@ import { Component, OnInit } from '@angular/core';
 import { FactureService } from '../../services/facture';
 import { ClientService } from '../../services/client';
 import { ProduitService } from '../../services/produit';
-import { FactureDetail, Client, Produit, Facture, LigneCommande } from '../../services/indexeddb';
+
+import { FactureDetail, Facture, LigneCommande } from '../../models/facture';
+import { Client } from '../../models/client';
+import { Produit } from '../../models/produit'; 
+
 import { Observable } from 'rxjs';
 import { CommonModule } from '@angular/common'; 
 import { FormsModule } from '@angular/forms';     
 
-
-interface NewLigneCommande extends Omit<LigneCommande, 'id' | 'factureId'> {
+interface NewLigneCommande {
   tempId?: number; 
+  produitId: number; 
+  quantite: number; 
   prixUnitaire: number;
 }
 
@@ -20,15 +25,13 @@ interface NewLigneCommande extends Omit<LigneCommande, 'id' | 'factureId'> {
   templateUrl: './factures.html',
   styleUrls: ['./factures.css']
 })
-export class FacturesComponent implements OnInit {
+export class FacturesComponent implements OnInit { 
   factures$!: Observable<FactureDetail[]>;
   clients$!: Observable<Client[]>;
   produits$!: Observable<Produit[]>;
     
-  
-  produitsList: Produit[] = []; 
-  
  
+  produitsList: Produit[] = []; 
   productNameMap: Map<number, string> = new Map(); 
 
   newFacture: {
@@ -60,7 +63,6 @@ export class FacturesComponent implements OnInit {
     this.clients$ = this.clientService.getClients();
     this.produits$ = this.produitService.getProduits();
     
-  
     this.produits$.subscribe(data => {
       this.produitsList = data;
       
@@ -73,8 +75,7 @@ export class FacturesComponent implements OnInit {
     });
   }
 
-
-
+  
   generateNewFactureNumber(): string {
     const now = new Date();
     const dateStr = now.toISOString().substring(0, 10).replace(/-/g, '');
@@ -89,7 +90,7 @@ export class FacturesComponent implements OnInit {
   calculateFactureTotal(): number {
     return this.newFacture.lignes.reduce((sum, ligne) => sum + this.calculateLigneTotal(ligne), 0);
   }
- 
+  
   trackByLigne(index: number, ligne: NewLigneCommande): number | undefined {
     return ligne.tempId; 
   }
@@ -100,7 +101,6 @@ export class FacturesComponent implements OnInit {
   }
   
  
-
   onProductSelected(productId: number | null): void {
     
     if (!productId || productId === 0) {
@@ -114,16 +114,15 @@ export class FacturesComponent implements OnInit {
         this.tempLigne.produitId = selectedProduct.id || 0;
         this.tempLigne.prixUnitaire = selectedProduct.prix;
         
-      
         if (this.tempLigne.quantite === 0) {
              this.tempLigne.quantite = 1;
         }
-
     } else {
         this.tempLigne.prixUnitaire = 0;
     }
   }
 
+  
   addLigneCommande(): void {
     if (this.tempLigne.produitId && this.tempLigne.quantite > 0 && this.tempLigne.prixUnitaire > 0) {
       const newLine: NewLigneCommande = {
@@ -132,18 +131,17 @@ export class FacturesComponent implements OnInit {
       };
       
       this.newFacture.lignes.push(newLine);
-
       this.tempLigne = { produitId: 0, quantite: 1, prixUnitaire: 0 };
     } else {
       alert("Veuillez sélectionner un produit et une quantité/prix valides.");
     }
   }
 
+ 
   removeLigne(index: number): void {
     this.newFacture.lignes.splice(index, 1);
   }
 
- 
 
   async createFacture(): Promise<void> {
     const { clientId, numFacture, date, lignes } = this.newFacture;
@@ -181,7 +179,6 @@ export class FacturesComponent implements OnInit {
   }
 
 
-
   async deleteFacture(id: number | undefined): Promise<void> {
     if (id !== undefined && confirm('Êtes-vous sûr de vouloir supprimer cette facture (et toutes ses lignes) ?')) {
       try {
@@ -192,4 +189,4 @@ export class FacturesComponent implements OnInit {
       }
     }
   }
-}
+} 

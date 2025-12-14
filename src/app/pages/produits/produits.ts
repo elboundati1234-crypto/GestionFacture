@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ProduitService } from '../../services/produit';
-import { Produit } from '../../services/indexeddb';
+import { Produit } from '../../models/produit'; 
 import { Observable } from 'rxjs';
 import { CommonModule } from '@angular/common'; 
 import { FormsModule } from '@angular/forms';     
@@ -14,7 +14,8 @@ import { FormsModule } from '@angular/forms';
 })
 export class ProduitsComponent implements OnInit {
   produits$!: Observable<Produit[]>; 
-  newProduit: Omit<Produit, 'id'> = { nameProd: '', description: '', prix: 0 };
+  
+  newProduit: { nameProd: string, description: string, prix: number } = { nameProd: '', description: '', prix: 0 };
   
   constructor(private produitService: ProduitService) { }
 

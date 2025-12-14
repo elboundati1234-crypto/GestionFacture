@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ClientService } from '../../services/client';
-import { Client } from '../../services/indexeddb';
+
+import { Client } from '../../models/client'; 
 import { Observable } from 'rxjs';
 import { CommonModule } from '@angular/common'; 
 import { FormsModule } from '@angular/forms';     
@@ -14,7 +15,9 @@ import { FormsModule } from '@angular/forms';
 })
 export class ClientsComponent implements OnInit {
   clients$!: Observable<Client[]>; 
-  newClient: Omit<Client, 'id'> = { name: '', lastName: '' };
+  
+  
+  newClient: { name: string, lastName: string } = { name: '', lastName: '' };
   
   constructor(private clientService: ClientService) { }
 
@@ -23,6 +26,7 @@ export class ClientsComponent implements OnInit {
   }
 
   async addClient(): Promise<void> {
+    
     if (this.newClient.name && this.newClient.lastName) {
       await this.clientService.addClient(this.newClient);
       this.newClient = { name: '', lastName: '' };
